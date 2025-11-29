@@ -82,7 +82,7 @@ WSGI_APPLICATION = 'OurChat.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get("POSTGRES_DB", "db_tp8"),
+        'NAME': os.environ.get("POSTGRES_DB", "db_tp8_ahbw"),
         'USER': os.environ.get("POSTGRES_USER", "db_tp8_ahbw_user"),
         'PASSWORD': os.environ.get("POSTGRES_PASSWORD", "6Qb3wAcoHlLzsCVYspnfxGa4R9SJWQlH"),
         'HOST': os.environ.get("POSTGRES_HOST", "dpg-d4lgbd0dl3ps73860ugg-a"),
