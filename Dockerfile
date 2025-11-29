@@ -6,20 +6,22 @@ WORKDIR /app
 
 # Installer les dépendances système nécessaires
 RUN apt-get update && apt-get install -y \
-    build-essential \
-    libpq-dev \
-    curl \
-    git \
-    && rm -rf /var/lib/apt/lists/*
+    build-essential \
+    libpq-dev \
+    curl \
+    git \
+    && rm -rf /var/lib/apt/lists/*
 
 # Copier le fichier requirements
 COPY requirements.txt .
 
-# Installer PyTorch CPU en premier pour éviter compilation
-RUN pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu
-
-# Installer le reste des dépendances
-RUN pip install --no-cache-dir -r requirements.txt
+# --- FUSION DES ÉTAPES D'INSTALLATION ---
+# Installer TOUTES les dépendances du requirements.txt 
+# et installer PyTorch CPU-only en spécifiant l'index URL.
+# Cela garantit que toutes les dépendances sont installées dans le même environnement 
+# et que seule la version légère de PyTorch est sélectionnée.
+RUN pip install --no-cache-dir -r requirements.txt \
+    && pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu
 
 # Copier le code du projet
 COPY . .
