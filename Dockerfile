@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 8000
 
 # Commande pour lancer le serveur Django avec migrations
-CMD ["sh", "-c", "python manage.py makemigrations --noinput && python manage.py migrate --noinput && gunicorn OurChat.wsgi:application --bind 0.0.0.0:8000"]
+CMD ["sh", "-c", "python manage.py makemigrations --noinput && python manage.py migrate --noinput && gunicorn OurChat(1).wsgi:application --bind 0.0.0.0:8000"]

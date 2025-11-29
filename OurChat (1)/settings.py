@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'chat',
+    'chat(1)',
     
 ]
 
@@ -55,7 +55,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'OurChat.urls'
+ROOT_URLCONF = 'OurChat(1).urls'
 
 TEMPLATES = [
     {
@@ -73,7 +73,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'OurChat.wsgi.application'
+WSGI_APPLICATION = 'OurChat(1).wsgi.application'
 
 
 # Database
@@ -83,9 +83,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.environ.get("POSTGRES_DB", "db_tp8"),
-        'USER': os.environ.get("POSTGRES_USER", "db_tp8_user"),
-        'PASSWORD': os.environ.get("POSTGRES_PASSWORD", "lly7oCvh5103JrHm0Q6gwe2B3QGqNSIB"),
-        'HOST': os.environ.get("POSTGRES_HOST", "dpg-d4eqndk9c44c73chtp20-a"),
+        'USER': os.environ.get("POSTGRES_USER", "db_tp8_ahbw_user"),
+        'PASSWORD': os.environ.get("POSTGRES_PASSWORD", "6Qb3wAcoHlLzsCVYspnfxGa4R9SJWQlH"),
+        'HOST': os.environ.get("POSTGRES_HOST", "dpg-d4lgbd0dl3ps73860ugg-a"),
         'PORT': os.environ.get("POSTGRES_PORT", "5432"),
     }
 }
@@ -133,4 +133,4 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost").split(",")
-ALLOWED_HOSTS = ['chatbot-cgp8.onrender.com']
+ALLOWED_HOSTS = ['https://chatbotservice-8rvb.onrender.com']
