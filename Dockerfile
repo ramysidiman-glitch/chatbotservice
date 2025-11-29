@@ -15,13 +15,11 @@ RUN apt-get update && apt-get install -y \
 # Copier le fichier requirements
 COPY requirements.txt .
 
-# --- FUSION DES ÉTAPES D'INSTALLATION ---
-# Installer TOUTES les dépendances du requirements.txt 
-# et installer PyTorch CPU-only en spécifiant l'index URL.
-# Cela garantit que toutes les dépendances sont installées dans le même environnement 
-# et que seule la version légère de PyTorch est sélectionnée.
+# --- NOUVELLE STRATÉGIE D'INSTALLATION DEPUIS LE FICHIER ---
+# Installer TOUTES les dépendances, en utilisant l'index PyTorch CPU 
+# comme index supplémentaire pour s'assurer que la version CPU de torch est trouvée.
 RUN pip install --no-cache-dir -r requirements.txt \
-    && pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cpu
+    --extra-index-url https://download.pytorch.org/whl/cpu
 
 # Copier le code du projet
 COPY . .
