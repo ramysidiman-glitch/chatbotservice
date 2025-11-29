@@ -6,7 +6,8 @@ import requests
 # Récupération du token Hugging Face depuis les variables d'environnement
 
 HF_API_KEY = os.environ.get("HF_API_KEY")
-HF_API_URL = "[https://api-inference.huggingface.co/models/t5-small](https://api-inference.huggingface.co/models/t5-small)"
+HF_API_URL = "https://api-inference.huggingface.co/models/t5-small"
+#RESDCSDC
 
 HEADERS = {"Authorization": f"Bearer {HF_API_KEY}"}
 
