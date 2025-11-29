@@ -2,6 +2,10 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from transformers import pipeline
 
+
+summarizer = None
+translator = None
+
 def get_summarizer():
     global summarizer
     if summarizer is None:
