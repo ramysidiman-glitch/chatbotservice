@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'chat(1)',
+    'chat (1)',
     
 ]
 
@@ -55,7 +55,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'OurChat(1).urls'
+ROOT_URLCONF = 'OurChat (1).urls'
 
 TEMPLATES = [
     {
@@ -73,7 +73,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'OurChat(1).wsgi.application'
+WSGI_APPLICATION = 'OurChat (1).wsgi.application'
 
 
 # Database
