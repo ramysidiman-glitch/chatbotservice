@@ -3,13 +3,14 @@ from rest_framework.response import Response
 import os
 import requests
 
-# Récupération du token Hugging Face depuis les variables d'environnement
+# URL du modèle Hugging Face léger et compatible API gratuite
 
+HF_API_URL = "https://api-inference.huggingface.co/models/google/mt5-small"
 HF_API_KEY = os.environ.get("HF_API_KEY")
-HF_API_URL = "https://api-inference.huggingface.co/models/t5-small"
-#RESDCSDC
 
-HEADERS = {"Authorization": f"Bearer {HF_API_KEY}"}
+# Header pour l'authentification
+
+HEADERS = {"Authorization": f"Bearer {HF_API_KEY}"} if HF_API_KEY else {}
 
 @api_view(['POST'])
 def chat(request):
@@ -17,14 +18,13 @@ def chat(request):
     text = data.get("text", "").strip()
     mode = data.get("mode", "").strip()
 
-
     if not text:
         return Response({"response": "Veuillez fournir du texte."}, status=400)
 
     if not HF_API_KEY:
         return Response({"error": "HF_API_KEY non défini"}, status=500)
 
-# Définition du prompt selon le mode
+    # Construire le prompt selon le mode choisi
     if mode == "translate":
         payload = {"inputs": f"translate English to French: {text}"}
     elif mode == "summarize":
@@ -33,10 +33,11 @@ def chat(request):
         return Response({"response": "Mode inconnu"}, status=400)
 
     try:
+        # Appel à l'API Hugging Face
         response = requests.post(HF_API_URL, headers=HEADERS, json=payload, timeout=30)
         response.raise_for_status()
         result = response.json()
-    # Récupération du texte généré
+        # Récupérer le texte généré
         reply = result[0]["generated_text"] if isinstance(result, list) else str(result)
         return Response({"response": reply})
     except requests.exceptions.RequestException as e:
@@ -44,7 +45,7 @@ def chat(request):
 
 @api_view(['GET'])
 def health_check(request):
-# Test simple si la clé est présente
+    # Vérifier que la clé HF est définie
     if HF_API_KEY:
         return Response({"status": "ok", "model_loaded": True})
     else:
