@@ -1,52 +1,44 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-import os
-import requests
+from transformers import pipeline
 
-# URL du modèle Hugging Face léger et compatible API gratuite
+# Utilisation de modèles BEAUCOUP plus légers
+# t5-small fait ~240Mo (contre >1Go pour les autres)
+# On utilise t5-small pour les DEUX tâches (il est multitâche)
+model_name = "t5-small" 
 
-HF_API_URL = "https://api-inference.huggingface.co/models/google/mt5-small"
-HF_API_KEY = os.environ.get("HF_API_KEY")
-
-# Header pour l'authentification
-
-HEADERS = {"Authorization": f"Bearer {HF_API_KEY}"} if HF_API_KEY else {}
+# On charge le pipeline une seule fois pour économiser la RAM
+# Note: le chargement au démarrage peut prendre du temps sur Render
+pipe = pipeline("text2text-generation", model=model_name)
 
 @api_view(['POST'])
 def chat(request):
-    data = request.data or {}
-    text = data.get("text", "").strip()
-    mode = data.get("mode", "").strip()
+    text = request.data.get("text", "").strip()
+    mode = request.data.get("mode", "").strip()
 
     if not text:
-        return Response({"response": "Veuillez fournir du texte."}, status=400)
+        return Response({"response": "Veuillez fournir du texte."})
 
-    if not HF_API_KEY:
-        return Response({"error": "HF_API_KEY non défini"}, status=500)
-
-    # Construire le prompt selon le mode choisi
-    if mode == "translate":
-        payload = {"inputs": f"translate English to French: {text}"}
-    elif mode == "summarize":
-        payload = {"inputs": f"summarize: {text}"}
-    else:
-        return Response({"response": "Mode inconnu"}, status=400)
-
+    reply = ""
     try:
-        # Appel à l'API Hugging Face
-        response = requests.post(HF_API_URL, headers=HEADERS, json=payload, timeout=30)
-        response.raise_for_status()
-        result = response.json()
-        # Récupérer le texte généré
-        reply = result[0]["generated_text"] if isinstance(result, list) else str(result)
-        return Response({"response": reply})
-    except requests.exceptions.RequestException as e:
-        return Response({"error": str(e)}, status=500)
+        if mode == "translate":
+            # T5 utilise des préfixes pour savoir quoi faire
+            input_text = f"translate English to French: {text}"
+            res = pipe(input_text, max_length=512)
+            reply = res[0]['generated_text']
 
+        elif mode == "summarize":
+            input_text = f"summarize: {text}"
+            res = pipe(input_text, min_length=30, max_length=150)
+            reply = res[0]['generated_text']
+        else:
+            reply = "Mode inconnu"
+            
+    except Exception as e:
+        reply = f"Erreur modèle: {str(e)}"
+
+    return Response({"response": reply})
 @api_view(['GET'])
 def health_check(request):
-    # Vérifier que la clé HF est définie
-    if HF_API_KEY:
-        return Response({"status": "ok", "model_loaded": True})
-    else:
-        return Response({"status": "error", "model_loaded": False}, status=503)
+    return Response({"status": "ok"})
+    
